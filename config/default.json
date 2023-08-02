@@ -1,0 +1,30 @@
+{
+    "secret_key": "3weplg!!2kdc",
+    "logo": "",
+    "Server_Port": 7090,
+    "encryption_key": "12dcafgtx#vmwp",
+    "static_file_routes": [
+        "/v1/api/logo",
+        "/v1/api/photo",
+        "/v1/api/signature"
+    ],
+    "unprotected_routes": [
+        "/v1/api/user/signin"
+    ],
+    "log_port": 39019,
+    "log_ip": "10.10.0.123",
+    "db": {
+        "name": "retail",
+        "port": 27017,
+        "host": "localhost"
+    },
+    "email":{
+        "GMAIL_USER":"deliveryapptest081@gmail.com",
+        "GMAIL_PASSWORD":"ehotytcatcqpbogk"
+    },
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379
+    }
+
+}
