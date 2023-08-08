@@ -8,13 +8,33 @@ class PaymentsService extends Service {
            
     async addPayments(user,data){
         try {
+            const sequenceNumber = (await this.repo.getSequenceNumber()).toString();
             data.registeredBy = user.id;
             data.transDate = this.repo.getTransDate();
             data.total= data.order_items.reduce((acc,item)=>acc+(item.qty*item.unit_price),0);
+            data.trId= await this.repo.generateTrId('PY');
+            data.sqNumber = sequenceNumber.length<5?'0'.repeat(5-sequenceNumber.length)+sequenceNumber:sequenceNumber;
+
             const {error, item} = await this.repo.insert(data);
             return error ? new this.errorResponse():new this.successResponse({message:"order created.",item});
         } catch (err) {
             return new this.errorResponse()
+        }
+    }
+    async sumOfPayments(user,query,date){
+        try {
+            const count = await this.repo.sumOfPayments(query,date);
+            return new this.successResponse({count});
+        } catch (err) {
+           return new this.errorResponse(); 
+        }
+    }
+    async voidPayment(user,paymentId){
+        try {
+            await this.repo.update(paymentId,{status:"Void"});
+            return new this.successResponse();
+        } catch (err) {
+           return new this.errorResponse(); 
         }
     }
     async filterByDate(query,date){

@@ -13,6 +13,14 @@ class PaymentsModel {
                 type:String,
                 required:true
             },
+            trId:{
+                type:String,
+                required:true
+            },
+            sqNumber:{
+                type:String,
+                required:true
+            },
             table_no:String,
             total:{
                 type:Number,

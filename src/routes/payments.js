@@ -15,7 +15,11 @@ router.get('/filterByDate/:date', Payments.filterByDate);
 
 router.get('/cross-check/:date', Payments.crossCheck);
 
-router.put('/:id',valMiddleware(PaymentsSchema.updatePayments), Payments.update);
+router.get('/sum/:date', Payments.sumOfPayments);
+
+router.put('/update/:id',valMiddleware(PaymentsSchema.updatePayments), Payments.update);
+
+router.put('/void/:id',valMiddleware(PaymentsSchema.statusChange), Payments.voidPayment);
 
 router.post('/',valMiddleware(PaymentsSchema.addPayments), Payments.addPayments);
 

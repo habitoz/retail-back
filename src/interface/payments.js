@@ -1,7 +1,9 @@
 import BaseRepo from './BaseRepo';
 import PaymentsModel from '../models/payments.js';
 import OrdersRepo from './orders';
+import SequenceNumberRepo from './sequenceNumber';
 import moment from 'moment';
+import mongoose from 'mongoose';
 
 const Payments=new PaymentsModel().getInstance();
 
@@ -34,6 +36,37 @@ class PaymentsRepo extends BaseRepo {
     }
 
     //write your logic in here
+    async generateTrId(prefix='PM'){
+        return prefix+'-'+(Math.random()*1000000).toFixed(0);
+    }
+    async sumOfPayments(query,date){
+        const nextDate=moment(date).add(1,'days').format('YYYY-MM-DD');
+        if(query.waiter) query.waiter = mongoose.Types.ObjectId(query.waiter);
+        if(query.casher) query.casher = mongoose.Types.ObjectId(query.casher);
+        const res = await this.model.aggregate().match({ ...query, createdAt: { $gte: new Date(date), $lte: new Date(nextDate) } })
+        .group({
+            _id:'',
+            count:{$sum:'$total'}
+        });
+        return res[0].count||0;
+    }
+    async getSequenceNumber(){
+        const transDate = moment().format('YYYY-MM-DD');
+        const {isPresent,item} = await SequenceNumberRepo.checkIfItExists({date:transDate,sequenceFor:'Payment'});
+        if(isPresent){
+            await SequenceNumberRepo.update(item._id,{$inc:{sequence:1}});
+            return item.sequence+1;
+        }
+        const newSequence = {
+            date:transDate,
+            sequenceFor:'Payment',
+            sequence:1,
+        }
+        await SequenceNumberRepo.insert(newSequence)
+        return 1;
+        
+    }
+
     getTransDate(){
         return moment().format('YYYY-MM-DD');
     }
@@ -42,8 +75,12 @@ class PaymentsRepo extends BaseRepo {
         return await this.getAll({...query,createdAt:{$gte:new Date(date),$lt:new Date(nextDate)}});
     }
     async crossCheck(query,date){
-        const payment = await this.model.aggregate().match({transDate:date}).group({_id:'$waiter',total:{$sum:'$total'}});
-        const orders = await OrdersRepo.model.aggregate().match({transDate:date}).group({_id:'$waiter',total:{$sum:'$total'}});
+        if(query.waiter) query.waiter = mongoose.Types.ObjectId(query.waiter);
+        if(query.casher) query.casher = mongoose.Types.ObjectId(query.casher);
+        if(!query.status) query.status = 'Active';
+
+        const payment = await this.model.aggregate().match({...query,transDate:date}).group({_id:'$waiter',total:{$sum:'$total'}});
+        const orders = await OrdersRepo.model.aggregate().match({...query,transDate:date}).group({_id:'$waiter',total:{$sum:'$total'}});
         return {
             payment,
             orders
@@ -53,6 +90,7 @@ class PaymentsRepo extends BaseRepo {
         const { from, to = moment(moment.now()).format('YYYY-MM-DD') } = query;
         const fromDate= from ? moment(from,'ddd MMM DD YYYY HH:mm:ss').format('YYYY-MM-DD'):moment().format('YYYY-MM-DD');
         const toDate= moment(to,['ddd MMM DD YYYY HH:mm:ss','YYYY-MM-DD']).add(1,'day').format('YYYY-MM-DD');
+        if(!query.status) query.status = 'Active';
         
         query = fromDate ? {...query, createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) } } : {...query, createdAt: { $lte: new Date(toDate) } };
         

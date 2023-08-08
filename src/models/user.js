@@ -19,7 +19,7 @@ class UserModel {
             role: {
                 type: String,
                 required:true,
-                enum: ['manager', 'admin', 'cashier']
+                enum: ['manager', 'admin', 'casher']
             },
             photo: String,
             phone:String,

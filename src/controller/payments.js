@@ -15,8 +15,16 @@ class PaymentsController extends Controller {
         const response = await payments_service.addPayments(req.user,req.body);
         return res.status(response.statusCode).send(response)
     }
+    async voidPayment(req,res){
+        const response = await payments_service.voidPayment(req.user,req.params.id);
+        return res.status(response.statusCode).send(response)
+    }
     async filterByDate(req,res){
         const response = await payments_service.filterByDate(req.query,req.params.date);
+        return res.status(response.statusCode).send(response)
+    }
+    async sumOfPayments(req,res){
+        const response = await payments_service.sumOfPayments(req.user,req.query,req.params.date);
         return res.status(response.statusCode).send(response)
     }
     async getPaymentsReport(req,res){

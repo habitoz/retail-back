@@ -10,6 +10,15 @@ class OrdersModel {
                 required:true,
             },
             table_no:String,
+            sqNumber:{
+                type:String,
+                required:true
+            },
+            trId:{
+                type:String,
+                unique:true,
+                required:true
+            },
             transDate:{
                 type:String,
                 required:true

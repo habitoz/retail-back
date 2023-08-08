@@ -10,7 +10,7 @@ router.get('/detail/:id',auth(), User.get);
 router.put('/update/:id',auth(),valMiddleware(UserSchema.updateUser), User.update);
 router.put('status/:id',auth(),valMiddleware(UserSchema.updateUser), User.changeUserStatus);
 router.post('/',auth(),
-//valMiddleware(UserSchema.addUser),
+valMiddleware(UserSchema.addUser),
  User.addUser);
 
 router.post('/changepassword',auth(),

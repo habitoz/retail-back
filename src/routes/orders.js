@@ -15,10 +15,12 @@ router.get('/order-summary-report', Orders.getOrdersReport);
 
 router.get('/filterByDate/:date', Orders.filterByDate);
 
+router.get('/sum/:date', Orders.sumOfOrders);
+
 router.put('/:id',valMiddleware(OrdersSchema.updateOrders), Orders.update);
 
 router.post('/',valMiddleware(OrdersSchema.addOrders), Orders.addOrders);
 
-router.delete('/:id', Orders.delete);
+router.delete('/void/:id', Orders.voidOrder);
 
 export default router;

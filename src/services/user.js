@@ -12,7 +12,8 @@ class UserService extends Service {
             if (isPresent) return new this.errorResponse('email already taken.', 403);
             data.password = this.repo.hashPassword(data.password);
             data.registeredBy = user.id;
-            return await this.repo.insert(data);
+            await this.repo.insert(data);
+            return new this.successResponse({message:'user registered.'});
         } catch (err) {
             return new this.errorResponse()
         }

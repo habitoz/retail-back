@@ -15,8 +15,16 @@ class OrdersController extends Controller {
         const response = await orders_service.addOrders(req.user,req.body);
         return res.status(response.statusCode).send(response)
     }
+    async voidOrder(req,res){
+        const response = await orders_service.voidOrder(req.user,req.params.id);
+        return res.status(response.statusCode).send(response)
+    }
     async filterByDate(req,res){
-        const response = await orders_service.filterByDate(req.query,req.params.date);
+        const response = await orders_service.filterByDate(req.user,req.query,req.params.date);
+        return res.status(response.statusCode).send(response)
+    }
+    async sumOfOrders(req,res){
+        const response = await orders_service.sumOfOrders(req.user,req.query,req.params.date);
         return res.status(response.statusCode).send(response)
     }
     async getProductsReport(req,res){

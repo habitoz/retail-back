@@ -15,7 +15,7 @@ const updatePayments = Joi.object().keys({
 });
 
 const statusChange = Joi.object().keys({
-       
+       status:Joi.string().required().valid(['Void'])
 });
 
 export default {
