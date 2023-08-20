@@ -17,7 +17,7 @@ router.post('/changepassword',auth(),
 //valMiddleware(UserSchema.addUser),
  User.changePawssword);
 router.post('/signin',
-// valMiddleware(UserSchema.addUser),
+valMiddleware(UserSchema.signIn),
  User.signIn);
 router.post('/logout',auth(),valMiddleware(UserSchema.addUser), User.logout);
 router.delete('/:id',auth(), User.delete);

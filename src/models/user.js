@@ -7,10 +7,16 @@ class UserModel {
                 type: String,
                 required: true
             },
-            email: {
+            username: {
                 type: String,
                 required: true,
                 unique: true
+            },
+            email: {
+                type: String
+            },
+            phone: {
+                type: String
             },
             password: {
                 type: String,
@@ -21,8 +27,11 @@ class UserModel {
                 required:true,
                 enum: ['manager', 'admin', 'casher']
             },
+            no_attempts:{
+                type:Number,
+                default:0
+            },
             photo: String,
-            phone:String,
             registeredBy:{
                 type:mongoose.Types.ObjectId,
                 ref:"User",

@@ -8,8 +8,19 @@ class UserService extends Service {
 
     async addUser(user, data) {
         try {
-            const { isPresent } = await this.repo.checkIfItExists({ email: data.email });
-            if (isPresent) return new this.errorResponse('email already taken.', 403);
+            const { isPresent } = await this.repo.checkIfItExists({ username: data.username });
+            if (isPresent) return new this.errorResponse('username already taken.', 403);
+
+            if(data.email){
+                const { isPresent: emailExists } = await this.repo.checkIfItExists({ email: data.email });
+            if (emailExists) return new this.errorResponse('email already taken.', 403);
+            }
+
+            if(data.phone){
+                const { isPresent: phoneExists } = await this.repo.checkIfItExists({ phone: data.phone });
+                if (phoneExists) return new this.errorResponse('phone already taken.', 403);
+            }
+
             data.password = this.repo.hashPassword(data.password);
             data.registeredBy = user.id;
             await this.repo.insert(data);
@@ -30,8 +41,8 @@ class UserService extends Service {
 
     async signIn(data) {
         try {
-            data.email = data.email.trim();
-            const { isPresent, item } = await this.repo.checkIfItExists({ email: data.email });
+            data.username = data.username.trim();
+            const { isPresent, item } = await this.repo.checkIfItExists({ username: data.username });
             if (!isPresent)
                 return new this.errorResponse('Incorrect username or password', 400);
             if (item.status != 'Active')
@@ -44,6 +55,7 @@ class UserService extends Service {
                     message: 'User logged in successfully!',
                     access_token: token,
                     email: item.email,
+                    username: item.username,
                     role: item.role,
                     changePassword: item.passwordFlag ?
                         item.passwordFlag : false,

@@ -13,7 +13,7 @@ class PaymentsService extends Service {
             data.transDate = this.repo.getTransDate();
             data.total= data.order_items.reduce((acc,item)=>acc+(item.qty*item.unit_price),0);
             data.trId= await this.repo.generateTrId('PY');
-            data.sqNumber = sequenceNumber.length<5?'0'.repeat(5-sequenceNumber.length)+sequenceNumber:sequenceNumber;
+            data.sqNumber = sequenceNumber.length<5?'0'.repeat(4-sequenceNumber.length)+sequenceNumber:sequenceNumber;
 
             const {error, item} = await this.repo.insert(data);
             return error ? new this.errorResponse():new this.successResponse({message:"order created.",item});
