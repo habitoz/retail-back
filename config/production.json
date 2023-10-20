@@ -15,7 +15,7 @@
     "log_port": 39019,
     "log_ip": "10.10.0.123",
     "db": {
-        "name": "production",
+        "name": "retail",
         "port": 27017,
         "host": "127.0.0.1"
     }

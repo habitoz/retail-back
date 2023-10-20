@@ -11,12 +11,12 @@ class UserService extends Service {
             const { isPresent } = await this.repo.checkIfItExists({ username: data.username });
             if (isPresent) return new this.errorResponse('username already taken.', 403);
 
-            if(data.email){
+            if (data.email) {
                 const { isPresent: emailExists } = await this.repo.checkIfItExists({ email: data.email });
-            if (emailExists) return new this.errorResponse('email already taken.', 403);
+                if (emailExists) return new this.errorResponse('email already taken.', 403);
             }
 
-            if(data.phone){
+            if (data.phone) {
                 const { isPresent: phoneExists } = await this.repo.checkIfItExists({ phone: data.phone });
                 if (phoneExists) return new this.errorResponse('phone already taken.', 403);
             }
@@ -24,16 +24,23 @@ class UserService extends Service {
             data.password = this.repo.hashPassword(data.password);
             data.registeredBy = user.id;
             await this.repo.insert(data);
-            return new this.successResponse({message:'user registered.'});
+            return new this.successResponse({ message: 'user registered.' });
         } catch (err) {
             return new this.errorResponse()
         }
     }
-    
+
     async changePassword(id, data) {
         try {
-            let passcode = this.repo.hashPassword(data.password);
-            return await this.repo.update(id, { password: passcode });
+            const { isPresent, item } = await this.repo.checkIfItExists({ _id: id });
+            if (!isPresent) return new this.errorResponse();
+
+            const match = await this.repo.checkPasswordMatch(data.oldPassword, item.password);
+            if (!match) return new this.errorResponse('Incorrect current password', 400);
+
+            const passcode = this.repo.hashPassword(data.newPassword);
+            await this.repo.update(id, { password: passcode });
+            return new this.successResponse();
         } catch (err) {
             return new this.errorResponse()
         }

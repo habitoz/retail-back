@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-class ProductsModel {
+class CategoryModel {
     init() {
         const schema = new Schema({
 
@@ -10,18 +10,7 @@ class ProductsModel {
             },
             code: {
                 type: String,
-                required: true
-            },
-            order: {
-                type: Number,
-            },
-            price: {
-                type: Number,
-                required: true
-            },
-            category: {
-                type: mongoose.Types.ObjectId,
-                ref: 'Category',
+                unique: true,
                 required: true
             },
             description: String,
@@ -47,13 +36,13 @@ class ProductsModel {
             }
         });
 
-        return mongoose.model("Products", schema);
+        return mongoose.model("Category", schema);
     }
 
     getInstance() {
-        return mongoose.models['Products'] || this.init();
+        return mongoose.models['Category'] || this.init();
     }
 
 }
 
-export default ProductsModel;
+export default CategoryModel;

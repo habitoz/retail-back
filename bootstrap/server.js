@@ -1,6 +1,6 @@
 import http from "http";
 //import https from "https";
-import {WebSocketServer as websocket} from 'ws';
+import { WebSocketServer as websocket } from 'ws';
 import express from "express";
 import path from "path";
 import cors from "cors";
@@ -17,8 +17,8 @@ import app_auth from "../src/middleware/auth/app_auth";
 const server = express();
 const accessLogStream = fs.createWriteStream(
     path.normalize(__dirname + "/../logs/access.log"), {
-        flags: "a",
-    }
+    flags: "a",
+}
 );
 
 // server.use((req, res, next) => {
@@ -29,7 +29,7 @@ const accessLogStream = fs.createWriteStream(
 
 server.use(morgan("combined", { stream: accessLogStream }));
 server.use(
-    morgan(function(tokens, req, res) {
+    morgan(function (tokens, req, res) {
         const message = [
             tokens.method(req, res),
             tokens.url(req, res),
@@ -50,7 +50,7 @@ server.use(
             "http://localhost:8080",
             "http://192.168.43.212:8080",
             "http://localhost:8081",
-            "http://localhost:8081",
+            "http://royal.bar",
             "http://192.168.62.173:8080",
         ],
     })
@@ -76,7 +76,7 @@ const app = http.createServer(
     server
 );
 
-const ws = new websocket({server:app,verifyClient:socket_middleware});
+const ws = new websocket({ server: app, verifyClient: socket_middleware });
 ws.on("connection", handleSocketConnection);
 
 export {

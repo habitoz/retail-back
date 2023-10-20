@@ -3,28 +3,28 @@ import UserModel from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-const User=new UserModel().getInstance();
+const User = new UserModel().getInstance();
 
 class UserRepo extends BaseRepo {
 
-        constructor(model) {
-            super(model);
-        }
+    constructor(model) {
+        super(model);
+    }
 
-    async search(query){
+    async search(query) {
         return await super.search(query);
     }
     async getById(id, query = {}, exclude = []) {
-        return await super.getById(id,query,exclude);
+        return await super.getById(id, query, exclude);
     }
     async getOneByCondition(condition, query = {}, exclude = []) {
-        return await super.getOneByCondition(condition,query,exclude);
+        return await super.getOneByCondition(condition, query, exclude);
     }
     async getAll(query) {
-       return await super.getAll(query, '-token -password -updatedAt -createdAt -__v')
+        return await super.getAll(query, '-token -password -updatedAt -createdAt -__v')
     }
-    async checkIfItExists(condition,populate) {
-        return await super.checkIfItExists(condition,populate);
+    async checkIfItExists(condition, populate) {
+        return await super.checkIfItExists(condition, populate);
     }
     async insert(data, session) {
         return await super.insert(data, session);
@@ -53,13 +53,9 @@ class UserRepo extends BaseRepo {
 
         const payload = {
             id: user._id,
-            name: user.phone,
-            branch: user.branch,
-            wallet: user.walletCode,
-            branchName: '',
-            phone: user.phone,
+            name: user.full_name,
+            username: user.username,
             role: user.role,
-            email: user.email
         }
         return jwt.sign(payload, config.get('secret_key'), {
             expiresIn: '12h'

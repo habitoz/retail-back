@@ -4,7 +4,7 @@ export default async ()=>{
     const data = {
         full_name:"super admin",
         username:"admin",
-        email: "admin@admin.com",
+        email: "admin@royal.com",
         role:'manager',
         password: UserRepo.hashPassword('12'),
         status:"Active"
