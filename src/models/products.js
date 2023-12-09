@@ -24,6 +24,14 @@ class ProductsModel {
                 ref: 'Category',
                 required: true
             },
+            isBono: {
+                type: Boolean,
+                default: false
+            },
+            bonoPrice: {
+                type: Number,
+                default: 0
+            },
             description: String,
             registeredBy: {
                 type: mongoose.Types.ObjectId,

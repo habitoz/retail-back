@@ -7,6 +7,8 @@ const addProducts = Joi.object().keys({
     category: Joi.string().required(),
     status: Joi.string(),
     price: Joi.number().min(0).required(),
+    bonoPrice: Joi.number().min(0),
+    isBono: Joi.boolean(),
     description: Joi.string(),
 });
 
@@ -17,6 +19,8 @@ const updateProducts = Joi.object().keys({
     status: Joi.string(),
     order: Joi.number(),
     price: Joi.number().min(0),
+    isBono: Joi.boolean(),
+    bonoPrice: Joi.number().min(0),
     description: Joi.string(),
 });
 

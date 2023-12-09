@@ -10,6 +10,8 @@ import employeesRoute from '../src/routes/employees';
 
 import categoryRoute from '../src/routes/category';
 
+import bonoRoute from '../src/routes/bono';
+
 export default (server) => {
     server.use('/v1/api/user', UserRoute);
     server.use('/v1/api/products', productsRoute);
@@ -17,4 +19,5 @@ export default (server) => {
     server.use('/v1/api/payments', paymentsRoute);
     server.use('/v1/api/employees', employeesRoute);
     server.use('/v1/api/category', categoryRoute);
+    server.use('/v1/api/bono', bonoRoute);
 };

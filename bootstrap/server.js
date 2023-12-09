@@ -50,6 +50,7 @@ server.use(
             "http://localhost:8080",
             "http://192.168.43.212:8080",
             "http://localhost:8081",
+            "http://localhost:5173",
             "http://royal.bar",
             "http://192.168.62.173:8080",
         ],

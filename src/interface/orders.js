@@ -84,8 +84,8 @@ class OrdersRepo extends BaseRepo {
         const toDate = moment(to, ['ddd MMM DD YYYY HH:mm:ss', 'YYYY-MM-DD']).add(1, 'day').format('YYYY-MM-DD');
 
         query = fromDate ? { ...query, createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) } } : { ...query, createdAt: { $lte: new Date(toDate) } };
-        if (waiter) query.waiter = mongoose.Types.ObjectId(waiter);
-        if (registeredBy) query.registeredBy = mongoose.Types.ObjectId(registeredBy);
+        if (waiter) query.waiter = new mongoose.Types.ObjectId(waiter);
+        if (registeredBy) query.registeredBy = new mongoose.Types.ObjectId(registeredBy);
         if (!query.status) query.status = 'Active';
         delete query.from;
         delete query.to;
@@ -114,12 +114,12 @@ class OrdersRepo extends BaseRepo {
         const toDate = moment(to, ['ddd MMM DD YYYY HH:mm:ss', 'YYYY-MM-DD']).add(1, 'day').format('YYYY-MM-DD');
 
         query = fromDate ? { ...query, createdAt: { $gte: new Date(fromDate), $lte: new Date(toDate) } } : { ...query, createdAt: { $lte: new Date(toDate) } };
-        if (waiter) query.waiter = mongoose.Types.ObjectId(waiter);
-        if (registeredBy) query.registeredBy = mongoose.Types.ObjectId(registeredBy);
+        if (waiter) query.waiter = new mongoose.Types.ObjectId(waiter);
+        if (registeredBy) query.registeredBy = new mongoose.Types.ObjectId(registeredBy);
         if (!query.status) query.status = 'Active';
         delete query.from;
         delete query.to;
-        return await this.model.aggregate().match({ ...query }).unwind('order_items').lookup({
+        return await this.model.aggregate().match({ ...query }).unwind('order_items').sort({ createdAt: -1 }).lookup({
             from: "products",
             localField: "order_items.product_id",
             foreignField: "_id",
