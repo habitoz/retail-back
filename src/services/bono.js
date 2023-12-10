@@ -19,12 +19,19 @@ class BonoService extends Service {
     }
     async returnBono(user, data) {
         try {
+            const date = this.repo.getCurrentDate();
             for (let i = 0; i < data.items.length; i++) {
-                const date = this.repo.getCurrentDate()
-                await this.repo.returnBono({ waiter: data.waiter, product: data.items[i].product, date }, data.items[i].quantity, data.returnedAmount);
+                data.items[i].quantity = Number(data.items[i].quantity)
+                const { isPresent, item } = await this.repo.checkIfItExists({ waiter: data.waiter, product: data.items[i].product, date });
+                if (!isPresent) return new this.errorResponse('no previous order by the waiter.', 403);
+                if (item.returned + data.items[i].quantity > item.quantity) return new this.errorResponse('quantity exceeds previous order.', 403);
+            }
+            for (let i = 0; i < data.items.length; i++) {
+                await this.repo.returnBono({ waiter: data.waiter, product: data.items[i].product, date }, data.items[i].quantity, data.items[i].returnedAmount);
             }
             return new this.successResponse();
         } catch (err) {
+            console.log(err);
             return new this.errorResponse()
         }
     }

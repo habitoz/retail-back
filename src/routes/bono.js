@@ -15,7 +15,7 @@ router.put('/:id', valMiddleware(BonoSchema.updateBono), Bono.update);
 
 router.post('/', valMiddleware(BonoSchema.addBono), Bono.addBono);
 
-router.post('/return', valMiddleware(BonoSchema.addBono), Bono.returnBono);
+router.post('/return', valMiddleware(BonoSchema.returnBono), Bono.returnBono);
 
 router.delete('/:id', Bono.delete);
 
